@@ -1,0 +1,7 @@
+{
+  "name": "PremAnk",
+  "description": "Numerology-based matchmaking and love compatibility app with Indian aesthetic and cosmic theme",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
