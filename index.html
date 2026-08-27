@@ -1,0 +1,697 @@
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PremAnk — Prem ka Ank Vigyan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-night:#180D30;
+    --cosmic-purple:#2A1A4C;
+    --card-purple:#241640;
+    --card-purple-soft:#2E1B52;
+    --marigold:#E8AA42;
+    --marigold-soft:#F2C572;
+    --kumkum:#C1443B;
+    --peacock:#2C9187;
+    --cream:#F5EDE0;
+    --muted-cream:#C6BADD;
+    --ring-track:rgba(245,237,224,0.12);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+
+  body{
+    background:
+      radial-gradient(ellipse at 50% -10%, #3a2361 0%, transparent 60%),
+      linear-gradient(180deg, var(--ink-night) 0%, #120823 100%);
+    min-height:100vh;
+    font-family:'Mukta', sans-serif;
+    color:var(--cream);
+    position:relative;
+    overflow-x:hidden;
+    padding-bottom:64px;
+  }
+
+  .stars{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.55;
+    background-image:
+      radial-gradient(1.4px 1.4px at 12% 18%, rgba(245,237,224,0.85), transparent 60%),
+      radial-gradient(1px 1px at 42% 68%, rgba(245,237,224,0.6), transparent 60%),
+      radial-gradient(1.2px 1.2px at 73% 30%, rgba(245,237,224,0.75), transparent 60%),
+      radial-gradient(1px 1px at 85% 78%, rgba(245,237,224,0.5), transparent 60%),
+      radial-gradient(1.3px 1.3px at 25% 85%, rgba(245,237,224,0.65), transparent 60%),
+      radial-gradient(1px 1px at 60% 12%, rgba(245,237,224,0.55), transparent 60%);
+    background-size:240px 240px;
+    animation:twinkle 6s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{from{opacity:0.3}to{opacity:0.7}}
+
+  .app-shell{
+    position:relative; z-index:1;
+    max-width:460px; margin:0 auto;
+    padding:28px 20px 20px;
+    min-height:100vh;
+  }
+
+  .screen{ display:none; animation:fadeIn 0.4s ease; }
+  .screen.active{ display:block; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ---------- Chakra emblem (signature element) ---------- */
+  .chakra-emblem{
+    position:relative; width:150px; height:150px; margin:8px auto 18px;
+  }
+  .chakra-emblem::before{
+    content:''; position:absolute; inset:0; border-radius:50%;
+    background:conic-gradient(from 0deg, transparent, rgba(232,170,66,0.35), transparent 40%);
+    animation:spin 16s linear infinite;
+  }
+  .chakra-ring{ position:absolute; inset:0; animation:spin 22s linear infinite; }
+  .chakra-ring.fast{ animation-duration:1.8s; }
+  .num-node{
+    position:absolute; top:50%; left:50%; width:24px; height:24px; margin:-12px;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:12px; color:var(--marigold-soft);
+    background:var(--card-purple); border:1px solid rgba(232,170,66,0.45);
+    border-radius:50%;
+    transform:rotate(calc(var(--i) * 40deg)) translate(64px);
+  }
+  .chakra-center{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:64px; height:64px; border-radius:50%;
+    background:radial-gradient(circle, var(--card-purple-soft), var(--card-purple));
+    border:1.5px solid var(--marigold);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; box-shadow:0 0 22px rgba(232,170,66,0.35);
+  }
+  @keyframes spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+  /* ---------- Home ---------- */
+  .brand{
+    text-align:center; font-family:'Marcellus', serif; font-size:34px;
+    margin:0 0 4px; font-weight:400; letter-spacing:0.5px;
+  }
+  .brand span{ color:var(--marigold); }
+  .tagline{ text-align:center; color:var(--muted-cream); font-size:14px; margin:0 0 28px; }
+
+  .option-list{ display:flex; flex-direction:column; gap:14px; }
+  .option-card{
+    display:flex; align-items:center; gap:14px; text-align:left;
+    background:linear-gradient(135deg, var(--card-purple-soft), var(--card-purple));
+    border:1px solid rgba(232,170,66,0.25); border-radius:16px;
+    padding:16px; color:var(--cream); cursor:pointer;
+    font-family:'Mukta', sans-serif;
+    transition:transform 0.2s ease, border-color 0.2s ease;
+  }
+  .option-card:hover, .option-card:focus-visible{ transform:translateY(-2px); border-color:var(--marigold); }
+  .option-icon{ font-size:26px; flex-shrink:0; }
+  .option-title{ font-weight:700; font-size:17px; margin-bottom:2px; }
+  .option-sub{ font-size:12.5px; color:var(--muted-cream); }
+
+  .fun-note{
+    text-align:center; font-size:12px; color:var(--muted-cream);
+    margin-top:26px; opacity:0.8; line-height:1.5;
+  }
+
+  /* ---------- Form ---------- */
+  .back-btn{
+    background:none; border:none; color:var(--muted-cream); font-size:14px;
+    cursor:pointer; padding:6px 0; margin-bottom:8px; font-family:'Mukta', sans-serif;
+  }
+  .back-btn:hover{ color:var(--marigold-soft); }
+
+  #form-title{ font-family:'Marcellus', serif; font-size:26px; font-weight:400; margin:6px 0 4px; }
+  #form-sub{ color:var(--muted-cream); font-size:13.5px; margin:0 0 22px; line-height:1.5; }
+
+  .person-block{
+    background:var(--card-purple); border:1px solid rgba(232,170,66,0.2);
+    border-radius:16px; padding:16px; margin-bottom:14px;
+  }
+  .person-label{ display:block; font-weight:700; color:var(--marigold-soft); margin-bottom:12px; font-size:15px; }
+  .person-block label{ display:block; font-size:12.5px; color:var(--muted-cream); margin-bottom:12px; }
+  .person-block label:last-child{ margin-bottom:0; }
+  .person-block input{
+    width:100%; margin-top:6px; padding:11px 12px; border-radius:10px;
+    border:1px solid rgba(232,170,66,0.3); background:var(--ink-night);
+    color:var(--cream); font-size:15px; font-family:'Mukta', sans-serif;
+  }
+  .person-block input:focus-visible{ outline:2px solid var(--marigold); outline-offset:1px; }
+
+  .cta-btn{
+    width:100%; padding:15px; border-radius:14px; border:none;
+    background:linear-gradient(135deg, var(--kumkum), var(--marigold));
+    color:var(--ink-night); font-weight:700; font-size:16px; cursor:pointer;
+    font-family:'Mukta', sans-serif; margin-top:6px;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow:0 6px 18px rgba(193,68,59,0.3);
+  }
+  .cta-btn:hover{ transform:translateY(-2px); }
+  .cta-btn:focus-visible{ outline:2px solid var(--cream); outline-offset:2px; }
+  .cta-btn.ghost{
+    background:transparent; border:1.5px solid var(--marigold); color:var(--marigold-soft);
+    box-shadow:none;
+  }
+
+  /* ---------- Loading ---------- */
+  #screen-loading{ text-align:center; padding-top:18vh; }
+  .loading-text{
+    font-size:15px; color:var(--muted-cream); font-style:italic; min-height:20px;
+  }
+
+  /* ---------- Result ---------- */
+  .result-card{
+    background:linear-gradient(135deg, var(--card-purple-soft), var(--card-purple));
+    border:1px solid rgba(232,170,66,0.22); border-radius:16px;
+    padding:20px; margin-bottom:14px;
+    opacity:0; transform:translateY(14px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .result-card.visible{ opacity:1; transform:translateY(0); }
+
+  .eyebrow{
+    display:block; text-align:center; font-size:12px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--marigold-soft); margin-bottom:10px;
+  }
+  .score-ring{ position:relative; width:150px; height:150px; margin:0 auto 12px; }
+  .score-svg{ position:absolute; inset:0; transform:rotate(-90deg); }
+  .ring-bg{ fill:none; stroke:var(--ring-track); stroke-width:10; }
+  .ring-fg{ fill:none; stroke:var(--marigold); stroke-width:10; stroke-linecap:round; }
+  .score-value{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Marcellus', serif; font-size:34px; color:var(--cream);
+  }
+  .score-verdict{ text-align:center; font-size:15px; color:var(--cream); margin:6px 0 2px; font-weight:600; }
+  .score-tier-label{ text-align:center; font-size:14px; color:var(--muted-cream); margin:0; }
+
+  .result-card h3{ margin:0 0 12px; font-size:16px; font-family:'Marcellus', serif; font-weight:400; color:var(--marigold-soft); }
+  .result-card ul{ margin:0; padding-left:20px; font-size:14px; line-height:1.7; color:var(--cream); }
+  .result-card li{ margin-bottom:6px; }
+
+  .wish-card{
+    background:linear-gradient(135deg, #3a2361, var(--card-purple));
+    border:1px solid rgba(232,170,66,0.35);
+  }
+  .wish-card p{ font-style:italic; font-size:14.5px; line-height:1.7; margin:0; color:var(--cream); }
+
+  /* ---------- Footer ---------- */
+  .app-footer{
+    position:fixed; bottom:0; left:0; width:100%; z-index:2;
+    text-align:center; padding:12px 10px; font-size:11.5px;
+    color:var(--muted-cream); background:rgba(24,13,48,0.9);
+    border-top:1px solid rgba(232,170,66,0.25); backdrop-filter:blur(4px);
+  }
+  .app-footer span{ color:var(--marigold-soft); font-weight:700; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<div class="app-shell">
+
+  <!-- HOME -->
+  <section id="screen-home" class="screen active">
+    <div class="chakra-emblem" aria-hidden="true">
+      <div class="chakra-ring" id="ring-home">
+        <div class="num-node" style="--i:0">1</div>
+        <div class="num-node" style="--i:1">2</div>
+        <div class="num-node" style="--i:2">3</div>
+        <div class="num-node" style="--i:3">4</div>
+        <div class="num-node" style="--i:4">5</div>
+        <div class="num-node" style="--i:5">6</div>
+        <div class="num-node" style="--i:6">7</div>
+        <div class="num-node" style="--i:7">8</div>
+        <div class="num-node" style="--i:8">9</div>
+      </div>
+      <div class="chakra-center">💞</div>
+    </div>
+    <h1 class="brand">Prem<span>Ank</span></h1>
+    <p class="tagline">Naam, Tithi aur Prem ka Ank Vigyan ✨</p>
+
+    <div class="option-list">
+      <button class="option-card" data-mode="love">
+        <span class="option-icon">💑</span>
+        <span>
+          <span class="option-title">Prem Milan</span><br>
+          <span class="option-sub">Love Calculate — pyaar ka success score</span>
+        </span>
+      </button>
+      <button class="option-card" data-mode="date">
+        <span class="option-icon">📅</span>
+        <span>
+          <span class="option-title">Tithi Milan</span><br>
+          <span class="option-sub">Date Calculate — janam tithi ka ank milan</span>
+        </span>
+      </button>
+      <button class="option-card" data-mode="name">
+        <span class="option-icon">🔤</span>
+        <span>
+          <span class="option-title">Naam Ank</span><br>
+          <span class="option-sub">Name Calculate — naam ki numerology match</span>
+        </span>
+      </button>
+    </div>
+
+    <p class="fun-note">Ye app entertainment ke liye hai — asli rishta trust aur pyaar se banta hai 💫</p>
+  </section>
+
+  <!-- FORM -->
+  <section id="screen-form" class="screen">
+    <button class="back-btn" data-action="home">← Peeche</button>
+    <h2 id="form-title">Prem Milan 💞</h2>
+    <p id="form-sub">Dono ka pyaar kitna successful hoga, ank khud bata denge</p>
+    <form id="calc-form">
+      <div class="person-block">
+        <span class="person-label">Aap 🌙</span>
+        <label>Naam
+          <input type="text" id="nameA" required maxlength="40" placeholder="Apna naam likhein">
+        </label>
+        <label>Janam Tithi
+          <input type="date" id="dobA" required>
+        </label>
+      </div>
+      <div class="person-block">
+        <span class="person-label">Saathi 💫</span>
+        <label>Naam
+          <input type="text" id="nameB" required maxlength="40" placeholder="Unka naam likhein">
+        </label>
+        <label>Janam Tithi
+          <input type="date" id="dobB" required>
+        </label>
+      </div>
+      <button type="submit" class="cta-btn">Ank Dekhein ✨</button>
+    </form>
+  </section>
+
+  <!-- LOADING -->
+  <section id="screen-loading" class="screen">
+    <div class="chakra-emblem" aria-hidden="true">
+      <div class="chakra-ring fast">
+        <div class="num-node" style="--i:0">1</div>
+        <div class="num-node" style="--i:1">2</div>
+        <div class="num-node" style="--i:2">3</div>
+        <div class="num-node" style="--i:3">4</div>
+        <div class="num-node" style="--i:4">5</div>
+        <div class="num-node" style="--i:5">6</div>
+        <div class="num-node" style="--i:6">7</div>
+        <div class="num-node" style="--i:7">8</div>
+        <div class="num-node" style="--i:8">9</div>
+      </div>
+      <div class="chakra-center">✨</div>
+    </div>
+    <p class="loading-text" id="loading-text">Sitaron se sanket le rahe hain...</p>
+  </section>
+
+  <!-- RESULT -->
+  <section id="screen-result" class="screen">
+    <button class="back-btn" data-action="home">← Naya Ank</button>
+
+    <div class="result-card" id="step-score">
+      <span class="eyebrow" id="result-mode-label">Prem Milan Result</span>
+      <div class="score-ring">
+        <svg class="score-svg" viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+          <circle class="ring-fg" id="ring-fg" cx="60" cy="60" r="52"></circle>
+        </svg>
+        <div class="score-value"><span id="score-num">0</span></div>
+      </div>
+      <p class="score-verdict" id="score-verdict"></p>
+      <p class="score-tier-label" id="score-tier-label"></p>
+    </div>
+
+    <div class="result-card" id="step-pros">
+      <h3>✅ Khoobiyan</h3>
+      <ul id="pros-list"></ul>
+    </div>
+
+    <div class="result-card" id="step-cons">
+      <h3>🌱 Dhyan Dene Yogya</h3>
+      <ul id="cons-list"></ul>
+    </div>
+
+    <div class="result-card" id="step-remedy">
+      <h3>🪔 Upaay</h3>
+      <ul id="remedy-list"></ul>
+    </div>
+
+    <div class="result-card wish-card" id="step-wish">
+      <h3>🙏 Shubhkamna</h3>
+      <p id="wish-text"></p>
+    </div>
+
+    <div class="result-card" id="step-restart" style="background:none; border:none; box-shadow:none; padding:0;">
+      <button class="cta-btn ghost" data-action="restart">Fir Se Dekhein 🔄</button>
+    </div>
+  </section>
+
+</div>
+
+<footer class="app-footer">Design and Development <span>INFO-AI</span>          Powered by <span>RASHUIN</span></footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Numerology helpers ----------
+  var chaldeanMap = {
+    A:1,I:1,J:1,Q:1,Y:1,
+    B:2,K:2,R:2,
+    C:3,G:3,L:3,S:3,
+    D:4,M:4,T:4,
+    E:5,H:5,N:5,X:5,
+    U:6,V:6,W:6,
+    O:7,Z:7,
+    F:8,P:8
+  };
+
+  function reduceNum(n){
+    while(n > 9){
+      n = String(n).split('').reduce(function(a,b){ return a + Number(b); }, 0);
+    }
+    return n;
+  }
+
+  function nameNumber(name){
+    var sum = 0;
+    name.toUpperCase().split('').forEach(function(ch){
+      if(chaldeanMap[ch]) sum += chaldeanMap[ch];
+    });
+    return reduceNum(sum) || 1;
+  }
+
+  function dobNumber(dob){
+    var sum = 0;
+    dob.split('').forEach(function(ch){
+      if(/[0-9]/.test(ch)) sum += Number(ch);
+    });
+    return reduceNum(sum) || 1;
+  }
+
+  function hashCode(str){
+    var hash = 0;
+    for(var i=0; i<str.length; i++){
+      hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return hash;
+  }
+
+  function getVariation(str){
+    return (hashCode(str) % 9) - 4; // -4..+4
+  }
+
+  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+  // Harmony matrix (1-9), symmetric, designed for this app's numerology flavor
+  var H = [
+    [],
+    [0,90,75,82,60,78,70,65,58,85],
+    [0,75,88,70,80,62,84,60,72,68],
+    [0,82,70,90,65,85,68,78,60,74],
+    [0,60,80,65,86,58,76,62,84,55],
+    [0,78,62,85,58,90,60,80,65,72],
+    [0,70,84,68,76,60,92,58,78,66],
+    [0,65,60,78,62,80,58,88,55,76],
+    [0,58,72,60,84,65,78,55,90,60],
+    [0,85,68,74,55,72,66,76,60,94]
+  ];
+
+  function loveScore(nameA,dobA,nameB,dobB){
+    var lp1=dobNumber(dobA), lp2=dobNumber(dobB);
+    var nn1=nameNumber(nameA), nn2=nameNumber(nameB);
+    var base = (H[lp1][lp2] + H[nn1][nn2]) / 2;
+    var v = getVariation(nameA+dobA+nameB+dobB);
+    return clamp(Math.round(base+v), 42, 99);
+  }
+
+  function dateScore(nameA,dobA,nameB,dobB){
+    var lp1=dobNumber(dobA), lp2=dobNumber(dobB);
+    var base = H[lp1][lp2];
+    var v = getVariation('D'+dobA+dobB+nameA+nameB);
+    return clamp(Math.round(base+v), 42, 99);
+  }
+
+  function nameScore(nameA,dobA,nameB,dobB){
+    var nn1=nameNumber(nameA), nn2=nameNumber(nameB);
+    var base = H[nn1][nn2];
+    var v = getVariation('N'+nameA+nameB+dobA+dobB);
+    return clamp(Math.round(base+v), 42, 99);
+  }
+
+  function getTier(score){
+    if(score >= 85) return 'excellent';
+    if(score >= 70) return 'good';
+    if(score >= 55) return 'average';
+    return 'growing';
+  }
+
+  var CONTENT = {
+    excellent: {
+      label: "Shaandar Jodi 🌟",
+      verdict: "Bahut hi khaas milan hai!",
+      pros: [
+        "Ek dusre ko bina kahe samajhne ki kala aapme hai",
+        "Trust aur respect ka level bahut mazboot hai",
+        "Baat cheet naturally khul kar aur smooth hoti hai"
+      ],
+      cons: [
+        "Itna comfort kabhi chhoti baaton ko ignore karwa sakta hai",
+        "Ek dusre se expectations thodi zyada na badhayein"
+      ],
+      remedies: [
+        "Har Shukrawar thodi der sirf dono ke liye nikaalein, phone door rakhein",
+        "Dono kisi shubh din ek jaisa rang pehnein, bandhan aur mazboot hoga"
+      ]
+    },
+    good: {
+      label: "Achhi Jodi 💞",
+      verdict: "Ank thik-thak sanket de rahe hain, bas thoda dhyan chahiye.",
+      pros: [
+        "Dono mein caring aur samajhne ka nature hai",
+        "Mushkil samay mein ek dusre ka saath dete ho",
+        "Rishte mein aage badhne ka acha potential hai"
+      ],
+      cons: [
+        "Kabhi kabhi ego beech mein aa sakta hai",
+        "Patience thoda aur badhane ki zarurat hai"
+      ],
+      remedies: [
+        "Mangalwar ko kisi zaroori baat pe khul kar charcha karein",
+        "Ek dusre ke favorite rang ka chhota gift dein"
+      ]
+    },
+    average: {
+      label: "Thik-Thak Jodi 🌤️",
+      verdict: "Mehnat se ye rishta aur nikhrega.",
+      pros: [
+        "Rishta nibhane ki sacchi chaah dono mein hai",
+        "Sahi samajh se bahut kuch behtar ho sakta hai"
+      ],
+      cons: [
+        "Baat cheet mein kabhi kabhi gap aa sakta hai",
+        "Priorities alag ho sakti hain, samjhaute ki zarurat"
+      ],
+      remedies: [
+        "Roz sirf 10 minute bina distraction ke baat karein",
+        "Somvar ko shanti aur samajh ke liye thoda dhyaan lagayein"
+      ]
+    },
+    growing: {
+      label: "Badhta Rishta 🌱",
+      verdict: "Ank abhi shuruaat dikha rahe hain, mehnat rang layegi.",
+      pros: [
+        "Rishta banaye rakhne ki chaah dikh rahi hai",
+        "Sahi koshish se bade badlaav mumkin hain"
+      ],
+      cons: [
+        "Abhi thodi zyada samajh aur dhairya chahiye",
+        "Bharosa banane mein thoda waqt lag sakta hai"
+      ],
+      remedies: [
+        "Bina judge kiye ek dusre ki baat dhyan se sunein",
+        "Guruvaar ko sakaratmak soch ke saath din shuru karein"
+      ]
+    }
+  };
+
+  var wishOpenings = {
+    excellent: function(a,b){ return a+" aur "+b+", aapka bandhan taaron jaisa chamke."; },
+    good: function(a,b){ return a+" aur "+b+", thodi samajh se ye rishta aur khoobsurat banega."; },
+    average: function(a,b){ return a+" aur "+b+", dhairya aur pyaar se sab thik hoga."; },
+    growing: function(a,b){ return a+" aur "+b+", har mazboot rishta yahin se shuru hota hai."; }
+  };
+
+  function buildWish(tier, nameA, nameB){
+    return wishOpenings[tier](nameA, nameB) +
+      " Yaad rahein — ank sirf ek dishaa dikhate hain, asli kahani trust, communication aur pyaar se likhi jaati hai. Hamari shubhkamnayein hamesha aapke saath hain. 🙏✨";
+  }
+
+  var modeConfig = {
+    love: {
+      formTitle: "Prem Milan 💞",
+      formSub: "Dono ka pyaar kitna successful hoga, ank khud bata denge",
+      resultLabel: "Prem Milan Result",
+      scoreFn: loveScore
+    },
+    date: {
+      formTitle: "Tithi Milan 📅",
+      formSub: "Janam tithi ke ank se rishte ka mel dekhein",
+      resultLabel: "Tithi Milan Result",
+      scoreFn: dateScore
+    },
+    name: {
+      formTitle: "Naam Ank 🔤",
+      formSub: "Naam ki numerology se dosti-pyaar ka connection",
+      resultLabel: "Naam Ank Result",
+      scoreFn: nameScore
+    }
+  };
+
+  var loadingMessages = [
+    "Sitaron se sanket le rahe hain...",
+    "Naam ka ank nikal rahe hain...",
+    "Janam tithi ka hisaab laga rahe hain...",
+    "Prem ka rishta jod rahe hain...",
+    "Bas kuch pal aur..."
+  ];
+
+  // ---------- DOM refs ----------
+  var screens = {
+    home: document.getElementById('screen-home'),
+    form: document.getElementById('screen-form'),
+    loading: document.getElementById('screen-loading'),
+    result: document.getElementById('screen-result')
+  };
+
+  var currentMode = 'love';
+  var loadingTimer = null, loadingInterval = null;
+
+  function showScreen(name){
+    Object.keys(screens).forEach(function(key){
+      screens[key].classList.toggle('active', key === name);
+    });
+  }
+
+  // Home -> pick mode
+  document.querySelectorAll('.option-card').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      currentMode = btn.getAttribute('data-mode');
+      var cfg = modeConfig[currentMode];
+      document.getElementById('form-title').textContent = cfg.formTitle;
+      document.getElementById('form-sub').textContent = cfg.formSub;
+      document.getElementById('calc-form').reset();
+      showScreen('form');
+    });
+  });
+
+  // Back buttons
+  document.querySelectorAll('[data-action="home"]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      clearTimeout(loadingTimer);
+      clearInterval(loadingInterval);
+      showScreen('home');
+    });
+  });
+
+  document.querySelector('[data-action="restart"]').addEventListener('click', function(){
+    showScreen('home');
+  });
+
+  // Restrict DOB to not-future dates
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('dobA').max = today;
+  document.getElementById('dobB').max = today;
+
+  // Form submit
+  document.getElementById('calc-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var nameA = document.getElementById('nameA').value.trim();
+    var dobA = document.getElementById('dobA').value;
+    var nameB = document.getElementById('nameB').value.trim();
+    var dobB = document.getElementById('dobB').value;
+
+    showScreen('loading');
+    var loadingTextEl = document.getElementById('loading-text');
+    var msgIndex = 0;
+    loadingTextEl.textContent = loadingMessages[0];
+    loadingInterval = setInterval(function(){
+      msgIndex = (msgIndex + 1) % loadingMessages.length;
+      loadingTextEl.textContent = loadingMessages[msgIndex];
+    }, 1000);
+
+    loadingTimer = setTimeout(function(){
+      clearInterval(loadingInterval);
+      renderResult(currentMode, nameA, dobA, nameB, dobB);
+    }, 5000);
+  });
+
+  function renderResult(mode, nameA, dobA, nameB, dobB){
+    var cfg = modeConfig[mode];
+    var score = cfg.scoreFn(nameA, dobA, nameB, dobB);
+    var tier = getTier(score);
+    var content = CONTENT[tier];
+
+    document.getElementById('result-mode-label').textContent = cfg.resultLabel;
+    document.getElementById('score-verdict').textContent = content.verdict;
+    document.getElementById('score-tier-label').textContent = content.label;
+
+    fillList('pros-list', content.pros);
+    fillList('cons-list', content.cons);
+    fillList('remedy-list', content.remedies);
+    document.getElementById('wish-text').textContent = buildWish(tier, nameA, nameB);
+
+    // Reset step visibility
+    var steps = ['step-score','step-pros','step-cons','step-remedy','step-wish','step-restart'];
+    steps.forEach(function(id){ document.getElementById(id).classList.remove('visible'); });
+
+    showScreen('result');
+    animateScore(score);
+
+    var delays = [0, 1400, 2200, 3000, 3800, 4400];
+    steps.forEach(function(id, i){
+      setTimeout(function(){
+        document.getElementById(id).classList.add('visible');
+      }, delays[i]);
+    });
+  }
+
+  function fillList(id, items){
+    var ul = document.getElementById(id);
+    ul.innerHTML = '';
+    items.forEach(function(text){
+      var li = document.createElement('li');
+      li.textContent = text;
+      ul.appendChild(li);
+    });
+  }
+
+  function animateScore(score){
+    var circumference = 2 * Math.PI * 52;
+    var ringFg = document.getElementById('ring-fg');
+    var scoreNumEl = document.getElementById('score-num');
+    ringFg.style.strokeDasharray = circumference;
+    ringFg.style.strokeDashoffset = circumference;
+
+    var duration = 1200;
+    var start = null;
+
+    function step(timestamp){
+      if(!start) start = timestamp;
+      var t = Math.min((timestamp - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - t, 3);
+      var current = Math.round(eased * score);
+      scoreNumEl.textContent = current + '%';
+      ringFg.style.strokeDashoffset = circumference * (1 - (eased * score) / 100);
+      if(t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+})();
+</script>
+</body>
+          </html>
